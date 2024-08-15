@@ -1,0 +1,11 @@
+package com.videouploader
+
+const val CAMERA_UI_PERMISSION_REQUEST_CODE = 149
+
+const val LIMIT_CACHE_FILE = 3
+const val FILE_EXT = "mp4"
+
+const val UPLOAD_ROUTE_PARAM_KEY = "data"
+const val UPLOAD_ROUTE = "UPLOAD_ROUTE?$UPLOAD_ROUTE_PARAM_KEY={$UPLOAD_ROUTE_PARAM_KEY}"
+const val UPLOAD_ROUTE_ACTION =  "UPLOAD_ROUTE?$UPLOAD_ROUTE_PARAM_KEY=" // TODO: Need improve routing
+const val CAMERA_ROUTE = "CAMERA_ROUTE"
