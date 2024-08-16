@@ -14,7 +14,7 @@ import javax.inject.Inject
 import kotlin.math.ceil
 
 class VideoUploaderViewModel @Inject constructor(
-    val uploaderRepository: UploaderRepository
+    private val uploaderRepository: UploaderRepository
 ) : ViewModel() {
     private val _uiState = MutableStateFlow<VideoUploaderUiState>(VideoInitialUiState)
     val uiState get() = _uiState
@@ -32,6 +32,7 @@ class VideoUploaderViewModel @Inject constructor(
     fun uploadVideo(
         filePath: String
     ) {
+        clearUploadData()
         viewModelScope.launch(Dispatchers.IO) {
             uploaderRepository.uploadVideo(
                 filePath,
