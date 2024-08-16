@@ -5,4 +5,4 @@ import com.videouploader.model.RecordResultModel
 interface VideoUploaderUiState
 
 object VideoInitialUiState: VideoUploaderUiState
-data class VideoRecordSuccess(val result: RecordResultModel): VideoUploaderUiState
+data class VideoRecordFinish(val result: RecordResultModel): VideoUploaderUiState

@@ -120,7 +120,7 @@ fun VideoRecorderScreen(
                                     RecordResultModel(
                                         durationString = timer.longValue.toTimerFormat(),
                                         rawDuration = timer.longValue,
-                                        uri = recordEvent.outputResults.outputUri,
+                                        resultPath = recordEvent.outputResults.outputUri.toString(),
                                         error = recordEvent.cause,
                                         size = recordEvent.recordingStats.numBytesRecorded.byteToMega()
                                     )

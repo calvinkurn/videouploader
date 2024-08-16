@@ -63,6 +63,7 @@ dependencies {
     implementation(libs.cloudinary.android.core)
     implementation(libs.dagger)
     implementation(libs.androidx.navigation.compose)
+    implementation(libs.google.gson)
 
     implementation(libs.androidx.camera.core)
     implementation(libs.androidx.camera.camera2)

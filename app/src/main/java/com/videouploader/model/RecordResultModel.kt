@@ -1,11 +1,9 @@
 package com.videouploader.model
 
-import android.net.Uri
-
 data class RecordResultModel(
     val durationString: String,
     val rawDuration: Long,
-    val uri: Uri,
+    val resultPath: String,
     val error: Throwable?,
     val size: Double
 )

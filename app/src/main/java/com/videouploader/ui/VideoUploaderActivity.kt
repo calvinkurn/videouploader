@@ -7,29 +7,26 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Button
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Modifier
 import androidx.core.app.ActivityCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavHostController
-import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.navArgument
+import com.google.gson.Gson
 import com.videouploader.CAMERA_ROUTE
 import com.videouploader.CAMERA_UI_PERMISSION_REQUEST_CODE
 import com.videouploader.UPLOAD_ROUTE
 import com.videouploader.UPLOAD_ROUTE_ACTION
 import com.videouploader.UPLOAD_ROUTE_PARAM_KEY
 import com.videouploader.di.VideoUploaderApplication
+import com.videouploader.model.RecordResultModel
 import com.videouploader.ui.theme.VideoUploaderTheme
 import com.videouploader.ui.view.CameraUiView
 import com.videouploader.ui.view.UploaderUiView
@@ -68,24 +65,24 @@ class VideoUploaderActivity @Inject constructor() : ComponentActivity() {
                         ) {
                             composable(CAMERA_ROUTE) {
                                 CameraUiView(isPermissionGranted.value) { recordResult ->
-                                    if (recordResult.error == null) {
-                                        viewModel.updateUiState(VideoRecordSuccess(recordResult))
-                                    } else {
-                                        // TODO: Error effect
-                                    }
+                                    viewModel.updateUiState(VideoRecordFinish(recordResult))
                                 }
                             }
                             composable(
-                                route = UPLOAD_ROUTE,
-                                arguments = listOf(
-                                    navArgument(UPLOAD_ROUTE_PARAM_KEY) {
-                                        type = NavType.StringType
-                                        defaultValue = ""
-                                    }
-                                )
+                                route = UPLOAD_ROUTE
                             ) {
                                 val dataString = it.arguments?.getString(UPLOAD_ROUTE_PARAM_KEY)
-                                UploaderUiView(dataString)
+                                val dataModel =
+                                    Gson().fromJson(dataString, RecordResultModel::class.java)
+                                UploaderUiView(
+                                    dataModel,
+                                    onBackPressed = {
+                                        navController?.popBackStack()
+                                    },
+                                    onUploadPressed = {
+                                        // TODO: implement upload
+                                    }
+                                )
                             }
                         }
                     }
@@ -125,8 +122,9 @@ class VideoUploaderActivity @Inject constructor() : ComponentActivity() {
         lifecycleScope.launch {
             viewModel.uiState.collectLatest {
                 when (it) {
-                    is VideoRecordSuccess -> {
-                        navController?.navigate(UPLOAD_ROUTE_ACTION + it.result.uri.toString())
+                    is VideoRecordFinish -> {
+                        val data = Gson().toJson(it.result)
+                        navController?.navigate(UPLOAD_ROUTE_ACTION + data)
                     }
                 }
             }
