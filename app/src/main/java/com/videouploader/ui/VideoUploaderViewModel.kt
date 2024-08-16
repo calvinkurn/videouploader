@@ -2,7 +2,6 @@ package com.videouploader.ui
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.cloudinary.android.callback.ErrorInfo
 import com.videouploader.byteToMega
 import com.videouploader.model.UploadResultModel
 import com.videouploader.repository.UploaderRepository
@@ -11,7 +10,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-import kotlin.math.ceil
 
 class VideoUploaderViewModel @Inject constructor(
     private val uploaderRepository: UploaderRepository
