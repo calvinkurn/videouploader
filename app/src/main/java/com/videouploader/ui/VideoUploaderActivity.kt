@@ -30,6 +30,7 @@ import com.videouploader.model.RecordResultModel
 import com.videouploader.ui.theme.VideoUploaderTheme
 import com.videouploader.ui.view.CameraUiView
 import com.videouploader.ui.view.UploaderUiView
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -76,11 +77,12 @@ class VideoUploaderActivity @Inject constructor() : ComponentActivity() {
                                     Gson().fromJson(dataString, RecordResultModel::class.java)
                                 UploaderUiView(
                                     dataModel,
+                                    viewModel,
                                     onBackPressed = {
-                                        navController?.popBackStack()
+                                        viewModel.updateUiState(RouteToCamera)
                                     },
-                                    onUploadPressed = {
-                                        // TODO: implement upload
+                                    onUploadPressed = { filePath ->
+                                        viewModel.uploadVideo(filePath.resultPath)
                                     }
                                 )
                             }
@@ -125,6 +127,10 @@ class VideoUploaderActivity @Inject constructor() : ComponentActivity() {
                     is VideoRecordFinish -> {
                         val data = Gson().toJson(it.result)
                         navController?.navigate(UPLOAD_ROUTE_ACTION + data)
+                    }
+                    is RouteToCamera -> {
+                        navController?.popBackStack()
+                        viewModel.clearUploadData()
                     }
                 }
             }
